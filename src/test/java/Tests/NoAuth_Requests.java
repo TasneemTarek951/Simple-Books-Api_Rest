@@ -9,6 +9,7 @@ import io.qameta.allure.*;
 import io.restassured.RestAssured;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
@@ -16,13 +17,19 @@ import java.util.List;
 
 import static io.restassured.RestAssured.given;
 
-
+@Epic("Simple Books API")
+@Feature("Public (No Authentication) Endpoints")
+@Listeners(Utiles.AllureListener.class)
 public class NoAuth_Requests {
     @BeforeMethod
     public void setup() {
         RestAssured.baseURI = DataUtils.get("Base_URL");
     }
+
     @Test(description = "Check server health status")
+    @Story("Get Status")
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("This test checks the status of the Simple Books API server using the /status endpoint.")
     public void getStatus() {
         Status status = given().when().get(DataUtils.get("Status_endpoint"))
                 .then().assertThat().log().all().statusCode(200).extract().response().as(Status.class);
@@ -30,6 +37,9 @@ public class NoAuth_Requests {
     }
 
     @Test(dataProvider = "ListBooksParameters", dataProviderClass = DataProviders.class)
+    @Story("List Books")
+    @Severity(SeverityLevel.NORMAL)
+    @Description("This test retrieves a list of books filtered by type and limited by a number of results.")
     public void getListOfBooks(String type, int limit) {
         List<ListBooks> listBooks = Arrays.asList(given().queryParam("type",type).queryParam("limit",limit)
                 .when().get(DataUtils.get("ListOfBooks_endpoint"))
@@ -43,6 +53,9 @@ public class NoAuth_Requests {
     }
 
     @Test(dataProvider = "BookID", dataProviderClass = DataProviders.class)
+    @Story("Get Book by ID")
+    @Severity(SeverityLevel.NORMAL)
+    @Description("This test retrieves a single book's details using its ID.")
     public void getBookById(int id) {
         BookById bookById = given().pathParam("bookId",id).when().get(DataUtils.get("BookByID_endpoint"))
                 .then().assertThat().log().all().statusCode(200).extract().as(BookById.class);
