@@ -1,6 +1,7 @@
 package TestData;
 
 import Tests.AuthRequire_Requests;
+import Tests.Scenario;
 import org.testng.annotations.DataProvider;
 
 import java.time.LocalDateTime;
@@ -37,5 +38,10 @@ public class DataProviders {
     @DataProvider(name = "UpdateOrder")
     public Object[][] UpdateOrder() {
         return new Object[][]{{AuthRequire_Requests.OrderIds.get(0),"Ahmed"},{AuthRequire_Requests.OrderIds.get(1),"ghada"}};
+    }
+
+    @DataProvider(name = "scenarioInfo")
+    public Object[][] scenarioInfo() {
+        return new Object[][]{{"fiction", 4,4,"Postman", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))+"@example.com",3,"john"}};
     }
 }
